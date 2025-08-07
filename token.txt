@@ -1,0 +1,81 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <cctype>
+#include <algorithm>
+using namespace std;
+
+vector<string> keywords = {
+    "int", "float", "double", "char", "if", "else", "for", "while", "return", "void", "bool", "string"
+};
+
+vector<string> operators = {"+", "-", "*", "/", "=", "==", "++", "--", "!="};
+
+bool isKeyword(const string &s) {
+    return find(keywords.begin(), keywords.end(), s) != keywords.end();
+}
+
+bool isOperator(const string &s) {
+    return find(operators.begin(), operators.end(), s) != operators.end();
+}
+
+bool isValidIdentifier(const string &s) {
+    if (s.empty())
+        return false;
+
+
+    if (!isalpha(s[0]) && s[0] != '_')
+        return false;
+
+
+    for (int i = 1; i < s.length(); i++) {
+        if (!isalnum(s[i]) && s[i] != '_')
+            return false;
+    }
+
+    return true;
+}
+
+int main() {
+    ifstream file("textfile1.txt");
+    string line;
+
+    if (!file.is_open()) {
+        cout << "File could not be opened." << endl;
+        return 1;
+    }
+
+    cout << "Token Analysis:\n" << endl;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string token;
+
+        while (ss >> token) {
+
+            if (isOperator(token)) {
+                cout << token << " => Operator" << endl;
+            }
+
+            else if (isKeyword(token)) {
+                cout << token << " => Keyword" << endl;
+            }
+
+            else if (isValidIdentifier(token)) {
+                cout << token << " => Valid Identifier" << endl;
+            }
+
+            else {
+                cout << token << " => Invalid Identifier or Unknown Token" << endl;
+            }
+        }
+    }
+
+    file.close();
+    return 0;
+}
+/*textfile1.txt
+asadvai jindabab1212@ 
+dsfdjsfkldjf;iofjwkjjfsdlkfjdsklf
+*/
